@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block main %}
+    <h2>Welcome to my basic Monopoly bot!</h2>
+    <br>
+    The goal of this bot is to develop a heat map of the Monopoly board.
+    <br>
+    <br>
+    Assume:
+    <br>
+    When the bot goes to jail, he will roll 3 times and then get out if no doubles are rolled.
+    <br>
+    There are equal chances of pulling any Chance or Community Chest card, even if it was just drawn.
+    <br>
+    <br>
+    To use, simply enter the amount of turns you would like the simulator to take.
+    <br>
+    <br>
+    <form action="/" method="post">
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="password" name="turns_taken_off_amount" placeholder="Amount of Turns" type="text">
+        </div>
+        <button class="btn btn-primary" type="submit">Run Simulator</button>
+    </form>
+{% endblock %}

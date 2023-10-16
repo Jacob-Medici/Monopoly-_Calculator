@@ -1,0 +1,155 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    After
+{% endblock %}
+
+{% block main %}
+        <!-- Insparation for this function is from "Styptic" at https://stackoverflow.com/questions/24931028/toggle-the-visibility-of-divs-based-on-checkboxes-using-javascript?answertab=scoredesc#tab-top -->
+    <script language="JavaScript">
+
+        function toggleVisibility1(eventsender, text_amount_lands)
+        {
+            var myNewState = "none";
+            if (eventsender.checked === true)
+            {
+                myNewState = "block";
+            }
+            document.getElementById(text_amount_lands).style.display = myNewState;
+        }
+
+        function toggleVisibility2(eventsender, text_chance_lands)
+        {
+            var myNewState = "none";
+            if (eventsender.checked === true)
+            {
+                myNewState = "block";
+            }
+            document.getElementById(text_chance_lands).style.display = myNewState;
+        }
+
+        function toggleVisibility3(eventsender, text_price_hotels)
+        {
+            var myNewState = "none";
+            if (eventsender.checked === true)
+            {
+                myNewState = "block";
+            }
+            document.getElementById(text_price_hotels).style.display = myNewState;
+        }
+
+        function toggleVisibility4(eventsender, text_misc_stats)
+        {
+            var myNewState = "none";
+            if (eventsender.checked === true)
+            {
+                myNewState = "block";
+            }
+            document.getElementById(text_misc_stats).style.display = myNewState;
+        }
+
+    </script>
+
+    <style type="text/css">
+        #text_amount_lands{display:none;}
+        #text_chance_lands{display:none;}
+        #text_price_hotels{display:none;}
+        #text_misc_stats{display:none;}
+    </style>
+    <h2>The calculations have been completed!</h2>
+    <br>
+    <h4>Select each box to see the information.</h4>
+    <br>
+    <h6><input type="checkbox" id="amount_lands" name="amount_lands" value="amount" onClick = "JavaScript:toggleVisibility1(this,'text_amount_lands');">
+    <label for="amount_lands"> Would you like to see how many times you landed on each space?</label></h6>
+    <div name="text_amount_lands" id="text_amount_lands">
+        Top:
+        <br>
+        The most landed on property was {{ spaces_dict[most_landed_1]['name'] }}, which was landed on {{ spaces_dict[most_landed_1]['times_landed_on']  | comma_num }} time(s)
+        <br>
+        The second most landed on property was {{ spaces_dict[most_landed_2]['name'] }}, which was landed on {{ spaces_dict[most_landed_2]['times_landed_on']  | comma_num }} time(s)
+        <br>
+        The third most landed on property was {{ spaces_dict[most_landed_3]['name'] }}, which was landed on {{ spaces_dict[most_landed_3]['times_landed_on']  | comma_num }} time(s)
+        <br>
+        <br>
+        Breakdown:
+        <br>
+        {% for space in spaces_dict %}
+            {{ spaces_dict[space]['name'] }} was landed on {{ (spaces_dict[space]['times_landed_on'] | comma_num ) }} time(s)
+            <br>
+        {% endfor %}
+        You spent {{ amount_in_jail | comma_num }} turns in jail.
+    </div>
+    <br>
+    <h6><input type="checkbox" id="chance_lands" name="chance_lands" value="chance" onClick = "JavaScript:toggleVisibility2(this,'text_chance_lands');">
+    <label for=""> Would you like to see the chance of landing on each space?</label></h6>
+    <div name="text_chance_lands" id="text_chance_lands">
+        Top:
+        <br>
+        The property with the highest proportion of times landed on it was {{ spaces_dict[most_landed_1]['name'] }}, which was landed on {{ (spaces_dict[most_landed_1]['chance_of_this_space'] * 100) | percent_num  }}% of the time
+        <br>
+        The property with the second highest proportion of times landed on it was {{ spaces_dict[most_landed_2]['name'] }}, which was landed on {{ (spaces_dict[most_landed_2]['chance_of_this_space'] * 100) | percent_num  }}% of the time
+        <br>
+        The property with the thrid highest proportion of times landed on it was {{ spaces_dict[most_landed_3]['name'] }}, which was landed on {{ (spaces_dict[most_landed_3]['chance_of_this_space'] * 100) | percent_num  }}% of the time
+        <br>
+        <br>
+        Breakdown:
+        <br>
+        {% for space in spaces_dict %}
+            {{ spaces_dict[space]['name'] }} was landed on {{ (spaces_dict[space]['chance_of_this_space'] * 100) | percent_num }}% of the time
+            <br>
+        {% endfor %}
+        You spent {{ (amount_in_jail / inputed_turns_taken_off_amount * 100) | percent_num }}% of your turns in jail
+    </div>
+    <br>
+    <h6><input type="checkbox" id="price_hotels" name="price_hotels" value="hotels" onClick = "JavaScript:toggleVisibility3(this,'text_price_hotels');">
+    <label for=""> Would you like to see the prices of spots if they had hotels?</label></h6>
+    <div name="text_price_hotels" id="text_price_hotels">
+        You would have to pay ${{ running_total_rent | prac_num }} if every property had a hotel on it!
+        <br>
+        <br>
+        Top:
+        <br>
+        The property with the highest total rent was {{ spaces_dict[most_price_1]['name'] }}, which cost ${{ (spaces_dict[most_price_1]['times_landed_on'] * spaces_dict[most_price_1]['rent_w_hotel']) | prac_num }}
+        <br>
+        The property with the second highest total rent was {{ spaces_dict[most_price_2]['name'] }}, which cost ${{ (spaces_dict[most_price_2]['times_landed_on'] * spaces_dict[most_price_2]['rent_w_hotel']) | prac_num }}
+        <br>
+        The property with the thrid highest total rent was {{ spaces_dict[most_price_3]['name'] }}, which cost ${{ (spaces_dict[most_price_3]['times_landed_on'] * spaces_dict[most_price_3]['rent_w_hotel']) | prac_num }}
+        <br>
+        <br>
+        Breakdown:
+        <br>
+        {% for space in spaces_dict %}
+            {% if spaces_dict[space]['rent_w_hotel'] != 0 %}
+                {{ spaces_dict[space]['name'] }} would cost you ${{ ((spaces_dict[space]['rent_w_hotel']) * (spaces_dict[space]['times_landed_on'])) | int | prac_num }} if it had hotels
+                <br>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <br>
+    <h6><input type="checkbox" id="misc_stats" name="misc_stats" value="stats" onClick = "JavaScript:toggleVisibility4(this,'text_misc_stats');">
+    <label for=""> Would you like to see miscellaneous stats from the game?</label></h6>
+    <div name="text_misc_stats" id="text_misc_stats">
+        You collected ${{ (money_from_go) | prac_num }} from GO! after landing on or passing it {{ ((money_from_go / 200))  | int | comma_num }} time(s)
+        <br>
+        You landed on Community Chest {{ comm_chest_lands  | comma_num }} times
+        <br>
+        You landed on Chance {{ chance_lands  | comma_num }} times
+        <br>
+        You paid to leave jail {{ paid_to_leave | comma_num }} times, and it cost you ${{ (paid_to_leave * 50) | prac_num}}
+        <br>
+        You went to jail {{ amount_in_jail | comma_num }} times, assuming an average stay of 1.3 years, you would have spent {{ (amount_in_jail * 1.3) | prac_num}} years behind bars
+        <br>
+        You paid ${{ taxes | prac_num}} in taxes and fees
+        <br>
+        You collected ${{ collected | prac_num}} from Community Chest and Chance
+        <br>
+        You rolled doubles {{ rolled_doubles | comma_num }} time(s)
+        <br>
+        You pulled {{ get_out_of_jail_free | comma_num }} get out of jail free card(s)
+    </div>
+    <br>
+    <form action="/after" method="post">
+        <button class="btn btn-primary" type="submit">Try Another Round</button>
+    </form>
+{% endblock %}

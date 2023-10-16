@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Error
+{% endblock %}
+
+{% block main %}
+    <h2>An Error Occured</h2>
+    <br>
+    <h4>Please enter a positive integer</h4>
+    <br>
+    <img src="/static/confused.jpg" alt="Confused Woman Meme Error 400">
+    <br>
+    <br>
+    <form action="/error" method="post">
+        <button class="btn btn-primary btn-lg" type="submit">Try Again</button>
+    </form>
+{% endblock %}
